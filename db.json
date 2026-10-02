@@ -1,12 +1,17 @@
 [
   {
     "name": "Gaming Laptop",
-    "price": 65000,
+    "price": 70000,
     "id": 1
   },
   {
     "id": 3,
     "name": "Keyboard",
     "price": 1500
+  },
+  {
+    "id": 4,
+    "name": "Monitor",
+    "price": 12000
   }
 ]
