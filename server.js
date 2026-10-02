@@ -1,58 +1,27 @@
-const express = require('express');
+const express = require("express");
+
+const productRoutes = require("./routes/productRoutes");
+
 const app = express();
-const fs = require('fs/promises');
-const path = require('path');
 
-const PathToFile = path.join(__dirname, "db.json");
-const port = 3000;
+const PORT = 3000;
 
-const cache = {};
+app.use(express.json());
 
-async function readFile() {
-  try {
-    const data = await fs.readFile(PathToFile, "utf-8");
-    return JSON.parse(data);
-  } catch (err) {
-    throw err;
-  }
-}
+app.use("/", productRoutes);
 
-app.get('/products/:id', async (req, res) => {
-  try {
-    const key = req.url;
-
-    // Check cache
-    if (cache[key]) {
-      console.log("Data from cache");
-      return res.json(cache[key]);
-    }
-
-    // Read from db.json
-    const products = await readFile();
-
-    const id = Number(req.params.id);
-
-    const product = products.find((item) => item.id === id);
-
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found"
-      });
-    }
-
-    // Store product in cache
-    cache[key] = product;
-
-    console.log("Data from database");
-
-    res.json(product);
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
-  }
+app.get("/", (req, res) => {
+  res.json({
+    message: "Product API is running"
+  });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Route not found"
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
